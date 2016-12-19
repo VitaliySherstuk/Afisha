@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.htp.by"
+	targetNamespace="http://www.htp.by" elementFormDefault="qualified">
+	<xs:element name="afisha" type="afishaType" />
+	<xs:element name="events" type="eventsType" />
+	<xs:element name="event" type="eventType" />
+	<xs:complexType name="afishaType">
+		<xs:sequence>
+			<xs:element name="events" type="eventsType" />
+		</xs:sequence>
+		<xs:attribute name="city" type="xs:string" use="required" />
+	</xs:complexType>
+	<xs:complexType name="eventsType">
+		<xs:choice>
+			<xs:element name="film" type="eventFilm" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="opera" type="eventOpera" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="exibition" type="eventExibition" minOccurs="0" maxOccurs="unbounded" />
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="eventType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" />
+			<xs:element name="date" type="xs:date" />
+			<xs:element name="time" type="xs:string" />
+			<xs:element name="place" type="xs:string" />
+			<xs:element name="cost" type="xs:double" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="eventFilm">
+		<xs:complexContent>
+			<xs:extension base="eventType">
+				<xs:sequence>
+					<xs:element name="genre">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="drama" />
+								<xs:enumeration value="horor" />
+								<xs:enumeration value="comedy" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="rating" type="xs:double" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="eventOpera">
+		<xs:complexContent>
+			<xs:extension base="eventType">
+				<xs:sequence>
+					<xs:element name="singer" type="xs:string" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="eventExibition">
+		<xs:complexContent>
+			<xs:extension base="eventType">
+				<xs:sequence>
+					<xs:element name="topic" type="xs:string" />
+					<xs:element name="author" type="xs:string" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>
