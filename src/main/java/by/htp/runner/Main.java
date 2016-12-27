@@ -13,6 +13,9 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 //import org.apache.logging.log4j.LogManager;
 //import org.apache.logging.log4j.Logger;
 
@@ -23,46 +26,37 @@ import by.htp.logic.impl.FileAfishaVisitor;
 
 public class Main {
 
-	//private final static Logger log = LogManager.getLogger();
+	private final static Logger log = LogManager.getLogger();
 	
 	public static void main(String[] args) {
+
+		Properties property = new Properties();
+		try {
+			property.load(new FileInputStream("src/main/resources/config.properties"));
+			System.out.println(property.getProperty("name"));
+		} catch (FileNotFoundException e) {
+			
+			e.printStackTrace();
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
 		
-		
-		
-		
-		
-		
-		
-		//Properties property = new Properties();
-//		try {
-//			property.load(new FileInputStream("resources/config.properties"));
-//			System.out.println(property.getProperty("name"));
-//		} catch (FileNotFoundException e) {
-//			
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			
-//			e.printStackTrace();
-//		}
-		
-//	try{
-//			ResourceBundle boundleRU = ResourceBundle.getBundle("config", new Locale("ru_RU"));
-//			ResourceBundle boundleEN = ResourceBundle.getBundle("config", Locale.ENGLISH);
-//			
-//			System.out.println(boundleRU.getString("file"));
-//			System.out.println(boundleEN.getString("name"));
-//		}
-//	catch(Exception e)
-//	{
-//		//e.printStackTrace();
-//		log.error("Some error");
-//		log.info("new event was");
-//		log.debug("new ");
-//	}
-		
-		
-		
-		
+	try{
+			ResourceBundle boundleRU = ResourceBundle.getBundle("config", new Locale("ru_RU"));
+			ResourceBundle boundleEN = ResourceBundle.getBundle("config", Locale.ENGLISH);
+			
+			System.out.println(boundleRU.getString("file"));
+			System.out.println(boundleEN.getString("name"));
+		}
+	catch(Exception e)
+	{
+		//e.printStackTrace();
+		log.error("Some error");
+		log.info("new event was");
+		log.debug("new ");
+	}
+
 		SimpleDateFormat checkDate = new SimpleDateFormat("yyyy.MM.dd");
 		Date day=null;
 		Date dayStart=null;

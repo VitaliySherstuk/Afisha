@@ -43,7 +43,7 @@ public class DateBase {
 		
 		}
 	
-	public List<Event> createEvent()
+	public List<Event> createEventList()
 	{
 		Film film;
 		Opera opera;
@@ -113,6 +113,77 @@ public class DateBase {
 			e.printStackTrace();
 		}
 		return listDB;
+	}
+	
+	public Event createEventFromDB(String name, String place, String date, String time)
+	{
+		connectDB(path, login, password);
+		try {
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM events WHERE name=? AND place=? AND date=? AND time?");
+			ps.setString(1, name);
+			ps.setString(2, place);
+			ps.setString(3, date);
+			ps.setString(4, time);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next())
+			{
+				if(rs.getString("event").equals("film"))
+				{
+					Film film = new Film();
+					film.setName(rs.getString("name"));
+					film.setPlace(rs.getString("place"));
+					try {
+						film.setDate(checkDate.parse(rs.getString("date")));
+					} catch (ParseException e) {
+						
+						e.printStackTrace();
+					}
+					film.setTime(rs.getString("time"));
+					film.setCost(BigDecimal.valueOf(Double.parseDouble(rs.getString("cost"))));
+					film.setGenreFilm(Genre.valueOf(rs.getString("genre").toUpperCase()));
+					film.setRatingFilm(Double.parseDouble(rs.getString("raiting")));
+					return film;
+				}
+				else if(rs.getString("event").equals("opera"))
+				{
+					Opera opera = new Opera();
+					opera.setName(rs.getString("name"));
+					opera.setPlace(rs.getString("place"));
+					try {
+						opera.setDate(checkDate.parse(rs.getString("date")));
+					} catch (ParseException e) {
+						
+						e.printStackTrace();
+					}
+					opera.setTime(rs.getString("time"));
+					opera.setCost(BigDecimal.valueOf(Double.parseDouble(rs.getString("cost"))));
+					opera.setSingerOpera(rs.getString("singer"));	
+					return opera;
+				}
+				else if(rs.getString("event").equals("exibition"))
+				{
+					Exibitions exibition = new Exibitions();
+					exibition.setName(rs.getString("name"));
+					exibition.setPlace(rs.getString("place"));
+					try {
+						exibition.setDate(checkDate.parse(rs.getString("date")));
+					} catch (ParseException e) {
+						
+						e.printStackTrace();
+					}
+					exibition.setTime(rs.getString("time"));
+					exibition.setCost(BigDecimal.valueOf(Double.parseDouble(rs.getString("cost"))));
+					exibition.setAuthor(rs.getString("author"));
+					exibition.setTopic(rs.getString("topic"));
+					return exibition;
+				}
+			}
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 	public void allToDisplay()
@@ -279,27 +350,64 @@ public class DateBase {
 		}
 	}
 	
-//	public void updateDateDBFilm(String name, String place, String date, String time, String fild, String value)
-//	{
-//		connectDB(path, login, password);
-//		try {
-//			PreparedStatement ps= connection.prepareStatement("UPDATE events SET  WHERE name=? AND place=? AND date=? AND time=?");
-//			ps.setString(1, name);
-//			ps.setString(2, place);
-//			ps.setString(3, date);
-//			ps.setString(4, time);
-//			int count = ps.executeUpdate();
-//		} catch (SQLException e) {
-//			
-//			e.printStackTrace();
-//		}
-//		try {
-//			connection.close();
-//		} catch (SQLException e) {
-//
-//			e.printStackTrace();
-//		}
-//		
-//	}
+	
+	
+	public void updateDateDBFilm(String name, String place, String date, String time, String fild, String value)
+	{
+		connectDB(path, login, password);
+		
+			try {
+				PreparedStatement ps=null;
+				switch(fild)
+				{
+				case "name":
+					ps = connection.prepareStatement("UPDATE events SET name=? WHERE name=? AND place=? AND date=? AND time=?");
+					break;
+				case "place":
+					ps = connection.prepareStatement("UPDATE events SET place=? WHERE name=? AND place=? AND date=? AND time=?");
+					break;
+				case "date":
+					ps = connection.prepareStatement("UPDATE events SET date=? WHERE name=? AND place=? AND date=? AND time=?");
+					break;
+				case "time":
+					ps = connection.prepareStatement("UPDATE events SET time=? WHERE name=? AND place=? AND date=? AND time=?");
+					break;
+				case "cost":
+					ps = connection.prepareStatement("UPDATE events SET cost=? WHERE name=? AND place=? AND date=? AND time=?");
+					break;
+				case "raiting":
+					ps = connection.prepareStatement("UPDATE events SET raiting=? WHERE name=? AND place=? AND date=? AND time=?");
+					break;
+				case "singer":
+					ps = connection.prepareStatement("UPDATE events SET singer=? WHERE name=? AND place=? AND date=? AND time=?");
+					break;
+				case "author":
+					ps = connection.prepareStatement("UPDATE events SET author=? WHERE name=? AND place=? AND date=? AND time=?");
+					break;
+				case "topic":
+					ps = connection.prepareStatement("UPDATE events SET topic=? WHERE name=? AND place=? AND date=? AND time=?");
+					break;
+				}
+				ps.setString(1, value);
+				ps.setString(2, name);
+				ps.setString(3, place);
+				ps.setString(4, date);
+				ps.setString(5, time);
+				int count = ps.executeUpdate();
+				if(count==1)
+				{
+					System.out.println("Событие было измененно");
+				}
+				else
+				{
+					System.out.println("Событие не было измененно");
+				}
+			} catch (SQLException e) {
+
+					e.printStackTrace();
+			}
+	}
 
 }
+	
+
